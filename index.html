@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 員工工作看板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* layout: summary strip, worker grid, two columns (to confirm / activity feed), modals for detail */
+  --bg:#f4f5f2; --card:#ffffff; --ink:#1d2421; --muted:#68726d; --line:#dfe3de;
+  --accent:#1f6f5c; --accent-ink:#ffffff;
+  --idle:#8a948f; --work:#1f8a4c; --wait:#b97a09; --err:#c0392b;
+  --shadow:0 1px 2px rgba(20,30,25,.06),0 6px 20px rgba(20,30,25,.05);
+  --font:"Noto Sans TC",system-ui,-apple-system,"PingFang TC",sans-serif;
+  --display:"Noto Serif TC","Songti TC",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101513; --card:#182019; --ink:#e7ece9; --muted:#91a09a; --line:#2a3530;
+    --accent:#4cc0a1; --accent-ink:#06231b;
+    --idle:#7c8782; --work:#47c27a; --wait:#e2a530; --err:#ef6a5b;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101513; --card:#182019; --ink:#e7ece9; --muted:#91a09a; --line:#2a3530;
+  --accent:#4cc0a1; --accent-ink:#06231b;
+  --idle:#7c8782; --work:#47c27a; --wait:#e2a530; --err:#ef6a5b;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 56px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{font-family:var(--display);font-size:26px;margin:0;letter-spacing:.02em;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.sum{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px;font-variant-numeric:tabular-nums}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--idle);flex:none}
+.dot.working{background:var(--work);box-shadow:0 0 0 0 var(--work);animation:pulse 1.8s infinite}
+.dot.waiting{background:var(--wait)}
+.dot.error{background:var(--err)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,138,76,.5)}70%{box-shadow:0 0 0 8px rgba(31,138,76,0)}100%{box-shadow:0 0 0 0 rgba(31,138,76,0)}}
+@media (prefers-reduced-motion:reduce){.dot.working{animation:none}}
+h2{font-size:15px;margin:26px 0 10px;letter-spacing:.04em;color:var(--muted);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:left;font:inherit;color:inherit;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;border-left:4px solid var(--idle)}
+.wk.working{border-left-color:var(--work)} .wk.waiting{border-left-color:var(--wait)} .wk.error{border-left-color:var(--err)}
+.wk:hover{border-color:var(--accent)}
+.wk:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wk .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wk .nm{font-weight:700;font-size:16px}
+.wk .rl{color:var(--muted);font-size:12.5px}
+.wk .cur{font-size:13.5px;min-height:40px;overflow-wrap:anywhere}
+.wk .tm{font-size:12px;color:var(--muted)}
+.st{font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:11px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .t{font-size:14px;overflow-wrap:anywhere}
+.row .m{font-size:12px;color:var(--muted)}
+.empty{padding:18px 14px;color:var(--muted);font-size:13.5px}
+.btns{display:flex;gap:6px;flex:none}
+button.b{font:inherit;font-size:13px;padding:5px 11px;border-radius:7px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+button.b:disabled{opacity:.5;cursor:not-allowed}
+.ov{position:fixed;inset:0;background:rgba(10,15,12,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.ov.on{display:flex}
+.md{background:var(--card);border-radius:12px;width:min(640px,100%);max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.md .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.md .hd h3{margin:0;font-size:18px}
+.md .bd{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.md .lb{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;margin-bottom:4px}
+.md textarea{width:100%;min-height:76px;font:inherit;padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+.logs{border:1px solid var(--line);border-radius:8px;max-height:220px;overflow:auto}
+.note{font-size:12.5px;color:var(--muted)}
+.banner{background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:12px 14px;color:var(--muted);font-size:13.5px;margin-bottom:14px}
+
+.login{max-width:360px;margin:12vh auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.login h1{font-size:22px}
+.login input{font:inherit;padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.order{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.order textarea{width:100%;min-height:64px;font:inherit;padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+.order .r{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+[hidden]{display:none!important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <h1>AI 員工工作看板</h1>
+  <div class="note">請登入</div>
+  <input id="em" type="email" placeholder="Email" autocomplete="username">
+  <input id="pw" type="password" placeholder="密碼" autocomplete="current-password">
+  <button class="b pri" id="lgbtn" type="button">登入</button>
+  <div class="note" id="lgerr" style="color:var(--err)"></div>
+</div>
+<div class="wrap" id="app" hidden>
+  <header>
+    <div>
+      <h1>AI 員工工作看板</h1>
+      <div class="sub">Unbound Studio · 3D 打印與激光雕刻 · Instagram 和小紅書</div>
+    </div>
+    <div class="sum" id="sum"></div>
+    <button class="linkbtn" id="logout" type="button">登出</button>
+  </header>
+  <div id="banner" class="banner" hidden></div>
+
+  <h2>下單</h2>
+  <div class="order">
+    <textarea id="order-text" placeholder="直接寫你要什麼，總管會拆給各部門。例如：幫我想 5 個適合大馬新加坡賣的 3D 打印小物"></textarea>
+    <div class="r"><span class="note">單子會排進清單，員工下次開工時領取。</span><button class="b pri" id="order-btn" type="button">下單給總管</button></div>
+  </div>
+  <h2>訂單進度</h2>
+  <div class="panel" id="tasks"></div>
+
+  <h2>員工</h2>
+  <div class="grid" id="grid"></div>
+
+  <div class="cols">
+    <div>
+      <h2>等你確認</h2>
+      <div class="panel" id="approve"></div>
+    </div>
+    <div>
+      <h2>最新動態</h2>
+      <div class="panel" id="feed"></div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="md" id="md" role="dialog" aria-modal="true"></div></div>
+
+<script>
+(function(){
+  var STATUS={idle:"待命",working:"工作中",waiting:"等你確認",error:"異常"};
+  var S={workers:[],logs:[],tasks:[],outputs:[],canWrite:true};
+  function isPending(o){return o.status==="pending"}
+  var db=null, ready=false, openId=null;
+
+  function $(id){return document.getElementById(id)}
+  function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+  function ago(iso){
+    if(!iso)return "尚無紀錄";
+    var s=(Date.now()-new Date(iso).getTime())/1000;
+    if(isNaN(s))return "";
+    if(s<60)return "剛剛";
+    if(s<3600)return Math.floor(s/60)+" 分鐘前";
+    if(s<86400)return Math.floor(s/3600)+" 小時前";
+    return Math.floor(s/86400)+" 天前";
+  }
+  function wname(id){var w=S.workers.filter(function(x){return x.id===id})[0];return w?w.name:id}
+  function showBanner(t){var b=$("banner");if(t){b.textContent=t;b.hidden=false}else b.hidden=true}
+
+  function renderSummary(){
+    var c={working:0,waiting:0,error:0};
+    S.workers.forEach(function(w){if(c[w.status]!=null)c[w.status]++});
+    var pend=S.outputs.filter(isPending).length;
+    var box=$("sum");box.textContent="";
+    [["working","工作中 "+c.working],["waiting","待確認 "+pend],["error","異常 "+c.error]].forEach(function(p){
+      var s=el("span","pill");s.appendChild(el("span","dot "+(p[0]==="working"&&c.working?"working":p[0]==="waiting"?"waiting":p[0]==="error"?"error":"")));
+      s.appendChild(document.createTextNode(p[1]));box.appendChild(s)});
+  }
+
+  function renderGrid(){
+    var g=$("grid");g.textContent="";
+    if(!S.workers.length){g.appendChild(el("div","empty","還沒有員工資料。"));return}
+    S.workers.forEach(function(w){
+      var b=el("button","wk "+w.status);b.type="button";b.id="wk-"+w.id;
+      var top=el("div","top");top.appendChild(el("span","nm",w.name));
+      var st=el("span","st");st.appendChild(el("span","dot "+(w.status==="idle"?"":w.status)));st.appendChild(document.createTextNode(STATUS[w.status]||w.status));
+      top.appendChild(st);b.appendChild(top);
+      b.appendChild(el("div","rl",w.role||""));
+      b.appendChild(el("div","cur",w.current||"目前沒有進行中的工作"));
+      b.appendChild(el("div","tm","最後更新 "+ago(w.updatedAt)));
+      b.addEventListener("click",function(){openWorker(w.id)});
+      g.appendChild(b);
+    });
+  }
+
+  function renderApprove(){
+    var p=$("approve");p.textContent="";
+    var list=S.outputs.filter(isPending);
+    if(!list.length){p.appendChild(el("div","empty","目前沒有需要你確認的項目。員工交出成品後會出現在這裡。"));return}
+    list.forEach(function(o){
+      var r=el("div","row");var l=el("div");
+      l.appendChild(el("div","t",o.title||"未命名成品"));
+      l.appendChild(el("div","m",wname(o.worker)+" · "+ago(o.at)));
+      r.appendChild(l);
+      var bt=el("div","btns");
+      var v=el("button","b","查看");v.type="button";v.addEventListener("click",function(){openOutput(o)});
+      bt.appendChild(v);r.appendChild(bt);p.appendChild(r);
+    });
+  }
+
+  function renderFeed(){
+    var p=$("feed");p.textContent="";
+    if(!S.logs.length){p.appendChild(el("div","empty","還沒有動態。"));return}
+    S.logs.slice(0,25).forEach(function(l){
+      var r=el("div","row");var d=el("div");
+      d.appendChild(el("div","t",l.text||""));
+      d.appendChild(el("div","m",wname(l.worker)+" · "+ago(l.at)));
+      r.appendChild(d);p.appendChild(r);
+    });
+  }
+
+  function renderAll(){renderSummary();renderTasks();renderGrid();renderApprove();renderFeed();if(openId)renderWorkerModal(openId,true)}
+
+  function closeModal(){$("ov").classList.remove("on");$("md").textContent="";openId=null}
+  $("ov").addEventListener("click",function(e){if(e.target===$("ov"))closeModal()});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+
+  function modalHead(title,sub){
+    var h=el("div","hd");var t=el("div");t.appendChild(el("h3","",title));if(sub)t.appendChild(el("div","note",sub));h.appendChild(t);
+    var x=el("button","b","關閉");x.type="button";x.addEventListener("click",closeModal);h.appendChild(x);return h;
+  }
+
+  function openWorker(id){openId=id;$("ov").classList.add("on");renderWorkerModal(id,false)}
+  function renderWorkerModal(id,keepDraft){
+    var w=S.workers.filter(function(x){return x.id===id})[0];if(!w){closeModal();return}
+    var md=$("md");var draft="";var ta=md.querySelector("textarea");if(ta&&keepDraft)draft=ta.value;
+    md.textContent="";
+    md.appendChild(modalHead(w.name,w.role));
+    var bd=el("div","bd");
+    var a=el("div");a.appendChild(el("div","lb","現在狀態"));
+    var st=el("span","st");st.appendChild(el("span","dot "+(w.status==="idle"?"":w.status)));st.appendChild(document.createTextNode((STATUS[w.status]||w.status)+"　"+(w.current||"目前沒有進行中的工作")));
+    a.appendChild(st);bd.appendChild(a);
+    var b=el("div");b.appendChild(el("div","lb","負責範圍"));b.appendChild(el("div","",w.scope||""));bd.appendChild(b);
+
+    var c=el("div");c.appendChild(el("div","lb","派一個任務給 "+w.name));
+    var t=el("textarea");t.id="task-text";t.placeholder="例如：想 10 個適合在大馬和新加坡賣的 3D 打印小物";t.value=draft;c.appendChild(t);
+    var row=el("div","btns");row.style.marginTop="6px";
+    var send=el("button","b pri","派任務");send.type="button";send.disabled=!S.canWrite;
+    send.addEventListener("click",function(){addTask(w.id,t,send)});row.appendChild(send);
+    if(!S.canWrite)row.appendChild(el("span","note","你目前沒有寫入權限"));
+    c.appendChild(row);
+    c.appendChild(el("div","note","任務會排進下面的清單，員工下次開工時領取。"));bd.appendChild(c);
+
+    var tk=S.tasks.filter(function(x){return x.worker===id}).slice(0,6);
+    var d=el("div");d.appendChild(el("div","lb","任務清單"));
+    var tl=el("div","logs");
+    if(!tk.length)tl.appendChild(el("div","empty","還沒有任務。"));
+    tk.forEach(function(x){var r=el("div","row");var dd=el("div");dd.appendChild(el("div","t",x.text));dd.appendChild(el("div","m",(x.status||"待處理")+" · "+ago(x.createdAt)));r.appendChild(dd);tl.appendChild(r)});
+    d.appendChild(tl);bd.appendChild(d);
+
+    var lg=S.logs.filter(function(x){return x.worker===id}).slice(0,12);
+    var e=el("div");e.appendChild(el("div","lb","工作紀錄"));
+    var ll=el("div","logs");
+    if(!lg.length)ll.appendChild(el("div","empty","還沒有紀錄。"));
+    lg.forEach(function(x){var r=el("div","row");var dd=el("div");dd.appendChild(el("div","t",x.text));dd.appendChild(el("div","m",ago(x.at)));r.appendChild(dd);ll.appendChild(r)});
+    e.appendChild(ll);bd.appendChild(e);
+    md.appendChild(bd);
+  }
+
+  function openOutput(o){
+    openId=null;$("ov").classList.add("on");var md=$("md");md.textContent="";
+    md.appendChild(modalHead(o.title||"成品",wname(o.worker)+" · "+ago(o.at)));
+    var bd=el("div","bd");
+    var body=el("div","",o.body||"");body.style.whiteSpace="pre-wrap";body.style.overflowWrap="anywhere";bd.appendChild(body);
+    var r=el("div","btns");
+    var ok=el("button","b pri","批准");ok.type="button";ok.disabled=!S.canWrite;
+    var no=el("button","b","退回");no.type="button";no.disabled=!S.canWrite;
+    ok.addEventListener("click",function(){setOutput(o.id,"approved",ok,no)});
+    no.addEventListener("click",function(){setOutput(o.id,"rejected",ok,no)});
+    r.appendChild(ok);r.appendChild(no);bd.appendChild(r);md.appendChild(bd);
+  }
+
+  function setOutput(id,status,a,b){
+    a.disabled=b.disabled=true;var old=a.textContent;a.textContent="處理中…";
+    var bd=a.parentNode.parentNode;var m=bd.querySelector(".errmsg");if(m)m.remove();
+    sb.from("board_outputs").update({status:status,decided_at:new Date().toISOString()}).eq("id",id).then(function(r){
+      if(r.error){a.textContent=old;a.disabled=b.disabled=false;var x=el("div","errmsg","沒有儲存成功："+r.error.message);x.style.cssText="color:#b3261e;margin-top:8px";bd.appendChild(x);return}
+      closeModal();load();
+    });
+  }
+  function addTask(worker,ta,btn){
+    var text=ta.value.trim();if(!text)return;btn.disabled=true;
+    sb.from("board_tasks").insert({worker:worker,text:text}).then(function(r){
+      btn.disabled=false;
+      if(r.error){showBanner("任務沒有送出："+r.error.message);return}
+      showBanner("");ta.value="";load();
+    });
+  }
+  function renderTasks(){
+    var p=$("tasks");p.textContent="";
+    if(!S.tasks.length){p.appendChild(el("div","empty","還沒有訂單。"));return}
+    S.tasks.slice(0,8).forEach(function(x){var r=el("div","row");var d=el("div");
+      d.appendChild(el("div","t",x.text));d.appendChild(el("div","m",wname(x.worker)+" · "+(x.status||"待處理")+" · "+ago(x.createdAt)));
+      r.appendChild(d);p.appendChild(r)});
+  }
+
+  var SB_URL="https://zyeyhyfdjtgmoocdjgcg.supabase.co", SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZXloeWZkanRnbW9vY2RqZ2NnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3NTAxMjIsImV4cCI6MjA5MDMyNjEyMn0.9W1f4KWxj82J8cgD1oPEmMfpqcFe11an9v9-ybjV-Sw";
+  var sb=supabase.createClient(SB_URL,SB_KEY);
+  var ready=false;
+  function mapW(r){return{id:r.id,name:r.name,role:r.role,scope:r.scope,status:r.status,current:r.current_text,order:r.sort_order,updatedAt:r.updated_at}}
+  function mapL(r){return{id:r.id,worker:r.worker,text:r.text,at:r.at}}
+  function mapT(r){return{id:r.id,worker:r.worker,text:r.text,status:r.status,createdAt:r.created_at}}
+  function mapO(r){return{id:r.id,worker:r.worker,title:r.title,body:r.body,status:r.status,at:r.at}}
+  function load(){
+    return Promise.all([
+      sb.from("board_workers").select("*").order("sort_order"),
+      sb.from("board_logs").select("*").order("at",{ascending:false}).limit(80),
+      sb.from("board_tasks").select("*").order("created_at",{ascending:false}).limit(80),
+      sb.from("board_outputs").select("*").order("at",{ascending:false}).limit(80)
+    ]).then(function(rs){
+      var err=rs.filter(function(r){return r.error})[0];
+      if(err){showBanner("讀取資料時出錯："+err.error.message);return}
+      ready=true;showBanner("");
+      S.workers=rs[0].data.map(mapW);S.logs=rs[1].data.map(mapL);S.tasks=rs[2].data.map(mapT);S.outputs=rs[3].data.map(mapO);
+      renderAll();
+    }).catch(function(){showBanner("暫時連不上資料，可能顯示的是舊內容。")});
+  }
+  var poll=null;
+  function showApp(on){$("app").hidden=!on;$("login").hidden=on;
+    if(on){load();if(!poll)poll=setInterval(function(){if(!document.hidden&&!openId)load()},20000)}
+    else if(poll){clearInterval(poll);poll=null}}
+  $("lgbtn").addEventListener("click",function(){
+    $("lgerr").textContent="";
+    sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value}).then(function(r){
+      if(r.error){$("lgerr").textContent="登入失敗："+r.error.message;return}
+      showApp(true)});
+  });
+  $("pw").addEventListener("keydown",function(e){if(e.key==="Enter")$("lgbtn").click()});
+  $("logout").addEventListener("click",function(){sb.auth.signOut().then(function(){S.workers=[];S.logs=[];S.tasks=[];S.outputs=[];showApp(false)})});
+  $("order-btn").addEventListener("click",function(){addTask("w1-boss",$("order-text"),$("order-btn"))});
+  sb.auth.getSession().then(function(r){showApp(!!(r.data&&r.data.session))});
+})();
+</script>
+</body>
+</html>
