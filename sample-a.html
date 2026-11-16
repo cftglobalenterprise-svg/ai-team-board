@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>帳務部 樣品 A</title><style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#fff3e0;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;color:#5a3a22}
+.wrap{max-width:430px;margin:0 auto;padding:14px 14px 40px}
+h1{font-size:19px;margin:6px 0 2px;text-align:center}
+.sub{font-size:12px;text-align:center;opacity:.7;margin-bottom:12px}
+.tabs{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:999px;padding:9px 14px;font:700 14px inherit;font-family:inherit;color:#7a4a22;background:#ffe3bd;box-shadow:0 3px 0 #e8b985;cursor:pointer}
+.tabs button.on{background:#ff9a3c;color:#fff;box-shadow:0 3px 0 #c9701a}
+.card{background:#fff;border-radius:28px;padding:8px;margin-bottom:16px;box-shadow:0 8px 22px rgba(150,80,20,.18),0 2px 0 #f3d6b0}
+.card.hide{display:none}
+.card svg{display:block;width:100%;height:auto;border-radius:22px}
+.cap{display:flex;align-items:center;justify-content:space-between;padding:8px 10px 4px;font-weight:800;font-size:15px}
+.cap small{font-weight:600;opacity:.65;font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.sc *{transform-box:view-box}
+/* common */
+.sc .steam{animation:steam 3s ease-in-out infinite}
+@keyframes steam{0%,100%{opacity:.25;transform:translateY(2px)}50%{opacity:.9;transform:translateY(-3px)}}
+/* idle */
+.idle .breath,.idle .breath2{animation:breathe 4s ease-in-out infinite;transform-origin:150px 250px}
+.idle .headrest{transform:translate(26px,44px) rotate(16deg);transform-origin:150px 130px}
+.idle .slump{transform:translate(12px,14px) rotate(8deg);transform-origin:150px 250px}
+.idle .breath2{transform-origin:150px 200px}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.025,1.04)}}
+.idle .z{opacity:0;animation:zfloat 4.2s ease-in-out infinite}
+.idle .z2{animation-delay:1.1s}.idle .z3{animation-delay:2.2s}
+@keyframes zfloat{0%{opacity:0;transform:translate(-10px,22px) scale(.6)}25%{opacity:1}80%{opacity:.9}100%{opacity:0;transform:translate(14px,-26px) scale(1.1)}}
+.idle .armL,.idle .armR{transform-origin:0 0}
+.idle .armL{animation:sway 4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(18deg)}50%{transform:rotate(14deg)}}
+.idle .armR{transform:rotate(6deg)!important}
+/* working */
+.work .bounce{animation:bob .8s ease-in-out infinite;transform-origin:150px 250px}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-4px) scale(1.01,.99)}}
+.work .armL{transform-origin:0 0;animation:press .7s ease-in-out infinite}
+@keyframes press{0%,100%{transform:rotate(-24deg)}50%{transform:rotate(-14deg)}}
+.work .armR{transform-origin:0 0;animation:stampArm 1.6s ease-in-out infinite}
+@keyframes stampArm{0%,100%{transform:rotate(-42deg)}35%{transform:rotate(-58deg)}60%{transform:rotate(-44deg)}70%{transform:rotate(-40deg)}}
+.work .mark{opacity:0;animation:mark 1.6s ease-out infinite}
+@keyframes mark{0%,62%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.15)}78%{transform:scale(1)}95%{opacity:.9}100%{opacity:0}}
+.work .mark{transform-origin:252px 240px}
+.work .n{opacity:0;animation:num 2.4s steps(1) infinite}
+.work .n1{animation-delay:.6s}.work .n2{animation-delay:1.2s}.work .n3{animation-delay:1.8s}
+@keyframes num{0%{opacity:1}25%,100%{opacity:0}}
+.work .pop{opacity:0;animation:pop 2.4s ease-out infinite}
+.work .p2{animation-delay:.8s}.work .p3{animation-delay:1.6s}
+@keyframes pop{0%{opacity:0;transform:translateY(34px) scale(.6)}15%{opacity:1}70%{opacity:1}100%{opacity:0;transform:translateY(-14px) scale(1.08)}}
+.work .k{animation:keyp .7s ease-in-out infinite}
+.work .k01{animation-delay:.1s}.work .k12{animation-delay:.35s}
+@keyframes keyp{0%,100%{opacity:1}50%{opacity:.82}}
+/* waiting */
+.wait .bounce2{animation:bob2 1.2s ease-in-out infinite;transform-origin:150px 250px}
+@keyframes bob2{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.wait .armR{transform-origin:0 0;animation:wave .9s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:rotate(-118deg)}50%{transform:rotate(-152deg)}}
+.wait .armL{transform-origin:0 0}
+.wait .alertin{transform-origin:236px 80px;animation:alert 1s cubic-bezier(.3,1.6,.5,1) infinite}
+@keyframes alert{0%{transform:translateY(8px) scale(.85)}35%{transform:translateY(-8px) scale(1.06)}60%{transform:translateY(0) scale(1)}100%{transform:translateY(8px) scale(.85)}}
+@media (prefers-reduced-motion:reduce){.sc *{animation:none!important}.work .n0{opacity:1}.work .pop,.work .mark{opacity:1}.idle .z{opacity:1}.work .p2,.work .p3{opacity:0}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="skin" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#fff0dc"/><stop offset=".45" stop-color="#ffd9b0"/><stop offset="1" stop-color="#f0a977"/></radialGradient>
+<radialGradient id="skinArm" cx="35%" cy="30%" r="85%"><stop offset="0" stop-color="#ffe6c8"/><stop offset="1" stop-color="#eeaa7c"/></radialGradient>
+<radialGradient id="shirt" cx="35%" cy="25%" r="90%"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#fff1de"/><stop offset="1" stop-color="#e9c9a3"/></radialGradient>
+<linearGradient id="sleeve" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6e8"/><stop offset=".6" stop-color="#fbe6c8"/><stop offset="1" stop-color="#e3bf93"/></linearGradient>
+<radialGradient id="hat" cx="35%" cy="22%" r="85%"><stop offset="0" stop-color="#8fe39a"/><stop offset=".5" stop-color="#3fbf63"/><stop offset="1" stop-color="#1f8a44"/></radialGradient>
+<linearGradient id="brim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fcf72"/><stop offset="1" stop-color="#1b7a3c"/></linearGradient>
+<linearGradient id="tie" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a7a"/><stop offset="1" stop-color="#d9433a"/></linearGradient>
+<radialGradient id="eye" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#6b4a3a"/><stop offset="1" stop-color="#2a1810"/></radialGradient>
+<radialGradient id="blush"><stop offset="0" stop-color="#ff8f8f" stop-opacity=".75"/><stop offset="1" stop-color="#ff8f8f" stop-opacity="0"/></radialGradient>
+<linearGradient id="calc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd27a"/><stop offset=".55" stop-color="#f6a93b"/><stop offset="1" stop-color="#d9811c"/></linearGradient>
+<linearGradient id="calcSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c06a14"/><stop offset="1" stop-color="#8f4a0c"/></linearGradient>
+<linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdf5d0"/><stop offset="1" stop-color="#9fe0a8"/></linearGradient>
+<linearGradient id="key" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#f1dcc0"/></linearGradient>
+<linearGradient id="keyRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a8a"/><stop offset="1" stop-color="#e2574a"/></linearGradient>
+<linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f1e6d2"/></linearGradient>
+<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b27a"/><stop offset=".5" stop-color="#d3945a"/><stop offset="1" stop-color="#b37140"/></linearGradient>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffeccf"/><stop offset="1" stop-color="#ffd7b0"/></linearGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff6d0" stop-opacity=".95"/><stop offset="1" stop-color="#fff6d0" stop-opacity="0"/></radialGradient>
+<radialGradient id="shadow"><stop offset="0" stop-color="#5a2e10" stop-opacity=".45"/><stop offset="1" stop-color="#5a2e10" stop-opacity="0"/></radialGradient>
+<radialGradient id="shoe" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#a5714d"/><stop offset="1" stop-color="#5e3a22"/></radialGradient>
+<linearGradient id="bubble" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a6e"/><stop offset="1" stop-color="#e5362f"/></linearGradient>
+<radialGradient id="mug" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e8d2b8"/></radialGradient>
+<radialGradient id="plant" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#9be59a"/><stop offset="1" stop-color="#3a9a52"/></radialGradient>
+<filter id="blur2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="blur6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+<filter id="drop" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#6b3a14" flood-opacity=".28"/></filter>
+</defs></svg>
+<div class="wrap"><h1>帳務部・黏土公仔樣品 A</h1><div class="sub">圓潤 3D 卡通風・三種狀態</div>
+<div class="tabs"><button class="on" data-k="all">全部</button><button data-k="idle">打瞌睡</button><button data-k="work">工作中</button><button data-k="wait">等你批准</button></div>
+<div class="card" data-k="idle"><svg viewBox="0 0 300 330" class="sc idle" role="img" aria-label="idle">
+<rect width="300" height="330" fill="url(#wall)"/>
+<ellipse cx="70" cy="80" rx="110" ry="90" fill="url(#glow)"/>
+<g opacity=".9"><rect x="196" y="28" width="70" height="56" rx="12" fill="#fff6e6" stroke="#f1c99a" stroke-width="3"/>
+<rect x="204" y="36" width="54" height="40" rx="8" fill="#bfe6ff"/><ellipse cx="222" cy="48" rx="10" ry="5" fill="#fff" opacity=".9"/><path d="M231 36 V76 M204 56 H258" stroke="#fff6e6" stroke-width="3"/></g>
+<g><rect x="22" y="40" width="44" height="30" rx="6" fill="#ffc9a0" stroke="#f0a977" stroke-width="2"/><path d="M30 62 L40 50 L48 58 L54 52 L60 62Z" fill="#ff9a62"/><circle cx="54" cy="48" r="4" fill="#fff6c0"/></g>
+<path d="M0 262 H300 V330 H0Z" fill="url(#wood)"/>
+<path d="M0 262 H300" stroke="#f6cf9d" stroke-width="4"/>
+<path d="M0 285 Q80 281 150 286 T300 284 M0 308 Q90 303 170 309 T300 306" fill="none" stroke="#9a5c2e" stroke-opacity=".28" stroke-width="2"/>
+<ellipse cx="150" cy="288" rx="95" ry="14" fill="url(#shadow)"/>
+<!-- mug & plant -->
+<g><ellipse cx="38" cy="296" rx="18" ry="5" fill="url(#shadow)"/><rect x="24" y="268" width="28" height="28" rx="9" fill="url(#mug)" stroke="#dcc3a3"/><path d="M52 276 q12 2 0 14" fill="none" stroke="#e2cbb0" stroke-width="4" stroke-linecap="round"/><ellipse cx="38" cy="271" rx="11" ry="3" fill="#8a5a3a"/>
+<path class="steam" d="M33 262 q-5 -8 0 -14 M43 262 q-5 -8 0 -14" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/></g>
+<g transform="translate(0 25)">
+<g transform="translate(-52 6)"><g class="calc idlecalc">
+<ellipse cx="154.0" cy="278" rx="46.0" ry="7" fill="url(#shadow)"/>
+<rect x="112" y="233" width="84" height="48" rx="16" fill="url(#calcSide)"/>
+<rect x="112" y="226" width="84" height="48" rx="16" fill="url(#calc)"/>
+<rect x="115" y="229" width="78" height="24.0" rx="13" fill="#fff" opacity=".22"/>
+<rect x="121" y="234" width="66" height="12.48" rx="7" fill="url(#screen)" stroke="#6aa974" stroke-width="1.5"/>
+<rect x="121" y="234" width="66" height="5" rx="2.5" fill="#2a5a32" opacity=".18"/>
+<text x="154" y="251" text-anchor="middle" font-size="14" fill="#4b8a58" font-weight="800" font-family="monospace" opacity=".55">z z</text>
+<rect class="k k00" x="122.0" y="246.2" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k01" x="138.8" y="246.2" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k02" x="155.6" y="246.2" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k03" x="172.4" y="246.2" width="13.5" height="6.2" rx="4" fill="url(#keyRed)" stroke="#c78a45" stroke-width=".8"/><rect class="k k10" x="122.0" y="254.3" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k11" x="138.8" y="254.3" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k12" x="155.6" y="254.3" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k13" x="172.4" y="254.3" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k20" x="122.0" y="262.5" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k21" x="138.8" y="262.5" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k22" x="155.6" y="262.5" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k23" x="172.4" y="262.5" width="13.5" height="6.2" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/>
+<path d="M122 268 Q154.0 275 186 268" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+</g></g>
+<g class="breath">
+<g class="slump"><g class="body">
+<ellipse cx="112" cy="250" rx="19" ry="12" fill="url(#shoe)"/><ellipse cx="188" cy="250" rx="19" ry="12" fill="url(#shoe)"/>
+<ellipse cx="106" cy="246" rx="7" ry="3" fill="#fff" opacity=".35"/><ellipse cx="182" cy="246" rx="7" ry="3" fill="#fff" opacity=".35"/>
+<ellipse cx="150" cy="198" rx="66" ry="56" fill="url(#shirt)" filter="url(#drop)"/>
+<path d="M118 150 L150 176 L182 150 Q150 142 118 150Z" fill="#fff" stroke="#e5cba6" stroke-width="2" stroke-linejoin="round"/>
+<path d="M142 168 L158 168 L162 196 Q150 206 138 196Z" fill="url(#tie)" stroke="#b92f28" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="141" y="160" width="18" height="12" rx="6" fill="url(#tie)"/>
+<path d="M144 175 L146 192" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="110" cy="200" rx="16" ry="30" fill="#fff" opacity=".35" filter="url(#blur6)"/>
+</g></g>
+</g>
+<g transform="translate(94 190)"><g class="armL" style="transform:rotate(18deg)">
+<rect x="-12" y="-6" width="24" height="46" rx="12" fill="url(#sleeve)" stroke="#e3bf93" stroke-width="1.5"/>
+<rect x="-6" y="-2" width="5" height="30" rx="2.5" fill="#fff" opacity=".6"/>
+<circle cx="0" cy="46" r="13" fill="url(#skinArm)"/><circle cx="-4" cy="42" r="4" fill="#fff" opacity=".6"/></g></g>
+<g transform="translate(0 0)"><g transform="translate(206 190)"><g class="armR" style="transform:rotate(8deg)">
+<rect x="-12" y="-6" width="24" height="46" rx="12" fill="url(#sleeve)" stroke="#e3bf93" stroke-width="1.5"/>
+<rect x="-6" y="-2" width="5" height="30" rx="2.5" fill="#fff" opacity=".6"/>
+<circle cx="0" cy="46" r="13" fill="url(#skinArm)"/><circle cx="-4" cy="42" r="4" fill="#fff" opacity=".6"/></g></g></g>
+<g class="headrest"><g class="breath2"><g class="head">
+<ellipse cx="150" cy="130" rx="64" ry="60" fill="url(#skin)" filter="url(#drop)"/>
+<ellipse cx="150" cy="130" rx="64" ry="60" fill="none" stroke="#e39a68" stroke-opacity=".35" stroke-width="2"/>
+<ellipse cx="110" cy="148" rx="16" ry="11" fill="url(#blush)"/><ellipse cx="190" cy="148" rx="16" ry="11" fill="url(#blush)"/>
+<g fill="none" stroke="#4a2a1a" stroke-width="4" stroke-linecap="round">
+<path d="M113 130 Q124 140 135 130"/><path d="M165 130 Q176 140 187 130"/></g>
+<ellipse cx="150" cy="156" rx="5" ry="4" fill="#8a3b2a"/>
+<path d="M108 100 Q118 86 134 84" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/>
+<g class="hatg">
+<ellipse cx="150" cy="97" rx="70" ry="15" fill="url(#brim)" filter="url(#drop)"/>
+<path d="M92 96 Q92 40 150 40 Q208 40 208 96 Q150 112 92 96Z" fill="url(#hat)"/>
+<path d="M104 78 Q112 56 138 50" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="6" stroke-linecap="round"/>
+<path d="M96 92 Q150 108 204 92" fill="none" stroke="#14602d" stroke-opacity=".35" stroke-width="3"/>
+<circle cx="150" cy="70" r="13" fill="#ffe08a"/><circle cx="150" cy="70" r="13" fill="none" stroke="#e0a82a" stroke-width="2"/>
+<text x="150" y="76" text-anchor="middle" font-size="17" font-weight="900" fill="#b9780f" font-family="Arial Rounded MT Bold,Arial,sans-serif">$</text>
+<circle cx="145" cy="65" r="3" fill="#fff" opacity=".8"/>
+</g></g></g></g>
+<g><g transform="translate(0 0)"><rect x="118" y="256" width="110" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="124" y="259.5" width="50" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(3 0)"><rect x="118" y="249" width="110" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="124" y="252.5" width="50" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(-2 0)"><rect x="118" y="242" width="110" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="124" y="245.5" width="50" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(4 0)"><rect x="118" y="235" width="110" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="124" y="238.5" width="50" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(-3 0)"><rect x="118" y="228" width="110" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="124" y="231.5" width="50" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(2 0)"><rect x="118" y="221" width="110" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="124" y="224.5" width="50" height="2" rx="1" fill="#cdb894"/></g></g>
+<g class="zzz"><text class="z z1" x="214" y="104" font-size="26" font-weight="900" fill="#7aa7ff" stroke="#fff" stroke-width="4" paint-order="stroke" font-family="Arial Rounded MT Bold,Arial,sans-serif">Z</text>
+<text class="z z2" x="226" y="86" font-size="20" font-weight="900" fill="#98b9ff" stroke="#fff" stroke-width="4" paint-order="stroke" font-family="Arial Rounded MT Bold,Arial,sans-serif">z</text>
+<text class="z z3" x="236" y="70" font-size="15" font-weight="900" fill="#b7cdff" stroke="#fff" stroke-width="3" paint-order="stroke" font-family="Arial Rounded MT Bold,Arial,sans-serif">z</text></g>
+</g>
+</svg><div class="cap"><span><i class="dot" style="background:#9bb7ff"></i>打瞌睡</span><small>趴在收據上休息中…</small></div></div>
+<div class="card" data-k="work"><svg viewBox="0 0 300 330" class="sc work" role="img" aria-label="work">
+<rect width="300" height="330" fill="url(#wall)"/>
+<ellipse cx="70" cy="80" rx="110" ry="90" fill="url(#glow)"/>
+<g opacity=".9"><rect x="196" y="28" width="70" height="56" rx="12" fill="#fff6e6" stroke="#f1c99a" stroke-width="3"/>
+<rect x="204" y="36" width="54" height="40" rx="8" fill="#bfe6ff"/><ellipse cx="222" cy="48" rx="10" ry="5" fill="#fff" opacity=".9"/><path d="M231 36 V76 M204 56 H258" stroke="#fff6e6" stroke-width="3"/></g>
+<g><rect x="22" y="40" width="44" height="30" rx="6" fill="#ffc9a0" stroke="#f0a977" stroke-width="2"/><path d="M30 62 L40 50 L48 58 L54 52 L60 62Z" fill="#ff9a62"/><circle cx="54" cy="48" r="4" fill="#fff6c0"/></g>
+<path d="M0 262 H300 V330 H0Z" fill="url(#wood)"/>
+<path d="M0 262 H300" stroke="#f6cf9d" stroke-width="4"/>
+<path d="M0 285 Q80 281 150 286 T300 284 M0 308 Q90 303 170 309 T300 306" fill="none" stroke="#9a5c2e" stroke-opacity=".28" stroke-width="2"/>
+<ellipse cx="150" cy="288" rx="95" ry="14" fill="url(#shadow)"/>
+<!-- mug & plant -->
+<g><ellipse cx="38" cy="296" rx="18" ry="5" fill="url(#shadow)"/><rect x="24" y="268" width="28" height="28" rx="9" fill="url(#mug)" stroke="#dcc3a3"/><path d="M52 276 q12 2 0 14" fill="none" stroke="#e2cbb0" stroke-width="4" stroke-linecap="round"/><ellipse cx="38" cy="271" rx="11" ry="3" fill="#8a5a3a"/>
+<path class="steam" d="M33 262 q-5 -8 0 -14 M43 262 q-5 -8 0 -14" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/></g>
+<g transform="translate(0 25)">
+<g><g transform="translate(0 0)"><rect x="222" y="262" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="265.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(3 0)"><rect x="222" y="255" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="258.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(-2 0)"><rect x="222" y="248" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="251.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(4 0)"><rect x="222" y="241" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="244.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(-3 0)"><rect x="222" y="234" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="237.5" width="25" height="2" rx="1" fill="#cdb894"/></g></g>
+<g class="wbody"><g class="bounce"><g class="body">
+<ellipse cx="112" cy="250" rx="19" ry="12" fill="url(#shoe)"/><ellipse cx="188" cy="250" rx="19" ry="12" fill="url(#shoe)"/>
+<ellipse cx="106" cy="246" rx="7" ry="3" fill="#fff" opacity=".35"/><ellipse cx="182" cy="246" rx="7" ry="3" fill="#fff" opacity=".35"/>
+<ellipse cx="150" cy="198" rx="66" ry="56" fill="url(#shirt)" filter="url(#drop)"/>
+<path d="M118 150 L150 176 L182 150 Q150 142 118 150Z" fill="#fff" stroke="#e5cba6" stroke-width="2" stroke-linejoin="round"/>
+<path d="M142 168 L158 168 L162 196 Q150 206 138 196Z" fill="url(#tie)" stroke="#b92f28" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="141" y="160" width="18" height="12" rx="6" fill="url(#tie)"/>
+<path d="M144 175 L146 192" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="110" cy="200" rx="16" ry="30" fill="#fff" opacity=".35" filter="url(#blur6)"/>
+</g><g class="head">
+<ellipse cx="150" cy="130" rx="64" ry="60" fill="url(#skin)" filter="url(#drop)"/>
+<ellipse cx="150" cy="130" rx="64" ry="60" fill="none" stroke="#e39a68" stroke-opacity=".35" stroke-width="2"/>
+<ellipse cx="110" cy="148" rx="16" ry="11" fill="url(#blush)"/><ellipse cx="190" cy="148" rx="16" ry="11" fill="url(#blush)"/>
+<g class="eyes">
+<ellipse cx="124" cy="128" rx="10" ry="12.5" fill="url(#eye)"/><circle cx="120.5" cy="123" r="4.2" fill="#fff"/><circle cx="128" cy="133" r="2" fill="#fff" opacity=".85"/>
+<ellipse cx="176" cy="128" rx="10" ry="12.5" fill="url(#eye)"/><circle cx="172.5" cy="123" r="4.2" fill="#fff"/><circle cx="180" cy="133" r="2" fill="#fff" opacity=".85"/></g>
+<path d="M136 150 Q150 172 164 150 Z" fill="#8a2f26" stroke="#7a3b25" stroke-width="3" stroke-linejoin="round"/><path d="M143 160 Q150 156 157 160 Q150 168 143 160Z" fill="#ff8b8b"/>
+<path d="M108 100 Q118 86 134 84" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/>
+<g class="hatg">
+<ellipse cx="150" cy="97" rx="70" ry="15" fill="url(#brim)" filter="url(#drop)"/>
+<path d="M92 96 Q92 40 150 40 Q208 40 208 96 Q150 112 92 96Z" fill="url(#hat)"/>
+<path d="M104 78 Q112 56 138 50" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="6" stroke-linecap="round"/>
+<path d="M96 92 Q150 108 204 92" fill="none" stroke="#14602d" stroke-opacity=".35" stroke-width="3"/>
+<circle cx="150" cy="70" r="13" fill="#ffe08a"/><circle cx="150" cy="70" r="13" fill="none" stroke="#e0a82a" stroke-width="2"/>
+<text x="150" y="76" text-anchor="middle" font-size="17" font-weight="900" fill="#b9780f" font-family="Arial Rounded MT Bold,Arial,sans-serif">$</text>
+<circle cx="145" cy="65" r="3" fill="#fff" opacity=".8"/>
+</g></g></g></g>
+<g class="calc">
+<ellipse cx="150.0" cy="278" rx="46.0" ry="7" fill="url(#shadow)"/>
+<rect x="108" y="229" width="84" height="52" rx="16" fill="url(#calcSide)"/>
+<rect x="108" y="222" width="84" height="52" rx="16" fill="url(#calc)"/>
+<rect x="111" y="225" width="78" height="26.0" rx="13" fill="#fff" opacity=".22"/>
+<rect x="117" y="230" width="66" height="13.52" rx="7" fill="url(#screen)" stroke="#6aa974" stroke-width="1.5"/>
+<rect x="117" y="230" width="66" height="5" rx="2.5" fill="#2a5a32" opacity=".18"/>
+<text class="n n0" x="150" y="242" text-anchor="middle" font-size="12" fill="#2d6a3b" font-weight="900" font-family="monospace">288.50</text><text class="n n1" x="150" y="242" text-anchor="middle" font-size="12" fill="#2d6a3b" font-weight="900" font-family="monospace">88.00</text><text class="n n2" x="150" y="242" text-anchor="middle" font-size="12" fill="#2d6a3b" font-weight="900" font-family="monospace">12.90</text><text class="n n3" x="150" y="242" text-anchor="middle" font-size="12" fill="#2d6a3b" font-weight="900" font-family="monospace">3,160</text>
+<rect class="k k00" x="118.0" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k01" x="134.8" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k02" x="151.6" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k03" x="168.4" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#keyRed)" stroke="#c78a45" stroke-width=".8"/><rect class="k k10" x="118.0" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k11" x="134.8" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k12" x="151.6" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k13" x="168.4" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k20" x="118.0" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k21" x="134.8" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k22" x="151.6" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k23" x="168.4" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/>
+<path d="M118 268 Q150.0 275 182 268" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(98 192)"><g class="armL" style="transform:rotate(-22deg)">
+<rect x="-12" y="-6" width="24" height="46" rx="12" fill="url(#sleeve)" stroke="#e3bf93" stroke-width="1.5"/>
+<rect x="-6" y="-2" width="5" height="30" rx="2.5" fill="#fff" opacity=".6"/>
+<circle cx="0" cy="46" r="13" fill="url(#skinArm)"/><circle cx="-4" cy="42" r="4" fill="#fff" opacity=".6"/></g></g>
+<g class="mark"><circle cx="252" cy="240" r="14" fill="none" stroke="#e5362f" stroke-width="3"/><text x="252" y="244" text-anchor="middle" font-size="11" font-weight="900" fill="#e5362f" font-family="Arial,sans-serif">PAID</text></g>
+<g class="stampwrap"><g transform="translate(202 192)"><g class="armR" style="transform:rotate(-30deg)">
+<rect x="-12" y="-6" width="24" height="46" rx="12" fill="url(#sleeve)" stroke="#e3bf93" stroke-width="1.5"/>
+<rect x="-6" y="-2" width="5" height="30" rx="2.5" fill="#fff" opacity=".6"/>
+<circle cx="0" cy="46" r="13" fill="url(#skinArm)"/><circle cx="-4" cy="42" r="4" fill="#fff" opacity=".6"/><g class="stamp"><rect x="-9" y="52" width="18" height="10" rx="3" fill="#c0502f"/><rect x="-5" y="40" width="10" height="14" rx="4" fill="#e8744f"/></g></g></g></g>
+<g class="pops"><text class="pop p1" x="78" y="40" font-size="24" font-weight="900" fill="#2fa84f" stroke="#fff" stroke-width="5" paint-order="stroke" font-family="Arial Rounded MT Bold,Arial,sans-serif">+88</text>
+<text class="pop p2" x="196" y="40" font-size="22" font-weight="900" fill="#f08a1f" stroke="#fff" stroke-width="5" paint-order="stroke" font-family="Arial Rounded MT Bold,Arial,sans-serif">$12</text>
+<text class="pop p3" x="140" y="30" font-size="18" font-weight="900" fill="#e5603a" stroke="#fff" stroke-width="4" paint-order="stroke" font-family="Arial Rounded MT Bold,Arial,sans-serif">+5</text></g>
+</g>
+</svg><div class="cap"><span><i class="dot" style="background:#3fbf63"></i>工作中</span><small>按計算機、蓋章</small></div></div>
+<div class="card" data-k="wait"><svg viewBox="0 0 300 330" class="sc wait" role="img" aria-label="wait">
+<rect width="300" height="330" fill="url(#wall)"/>
+<ellipse cx="70" cy="80" rx="110" ry="90" fill="url(#glow)"/>
+<g opacity=".9"><rect x="196" y="28" width="70" height="56" rx="12" fill="#fff6e6" stroke="#f1c99a" stroke-width="3"/>
+<rect x="204" y="36" width="54" height="40" rx="8" fill="#bfe6ff"/><ellipse cx="222" cy="48" rx="10" ry="5" fill="#fff" opacity=".9"/><path d="M231 36 V76 M204 56 H258" stroke="#fff6e6" stroke-width="3"/></g>
+<g><rect x="22" y="40" width="44" height="30" rx="6" fill="#ffc9a0" stroke="#f0a977" stroke-width="2"/><path d="M30 62 L40 50 L48 58 L54 52 L60 62Z" fill="#ff9a62"/><circle cx="54" cy="48" r="4" fill="#fff6c0"/></g>
+<path d="M0 262 H300 V330 H0Z" fill="url(#wood)"/>
+<path d="M0 262 H300" stroke="#f6cf9d" stroke-width="4"/>
+<path d="M0 285 Q80 281 150 286 T300 284 M0 308 Q90 303 170 309 T300 306" fill="none" stroke="#9a5c2e" stroke-opacity=".28" stroke-width="2"/>
+<ellipse cx="150" cy="288" rx="95" ry="14" fill="url(#shadow)"/>
+<!-- mug & plant -->
+<g><ellipse cx="38" cy="296" rx="18" ry="5" fill="url(#shadow)"/><rect x="24" y="268" width="28" height="28" rx="9" fill="url(#mug)" stroke="#dcc3a3"/><path d="M52 276 q12 2 0 14" fill="none" stroke="#e2cbb0" stroke-width="4" stroke-linecap="round"/><ellipse cx="38" cy="271" rx="11" ry="3" fill="#8a5a3a"/>
+<path class="steam" d="M33 262 q-5 -8 0 -14 M43 262 q-5 -8 0 -14" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/></g>
+<g transform="translate(0 25)">
+<g><g transform="translate(0 0)"><rect x="222" y="262" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="265.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(3 0)"><rect x="222" y="255" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="258.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(-2 0)"><rect x="222" y="248" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="251.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(4 0)"><rect x="222" y="241" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="244.5" width="25" height="2" rx="1" fill="#cdb894"/></g><g transform="translate(-3 0)"><rect x="222" y="234" width="56" height="10" rx="4" fill="url(#paper)" stroke="#d9c7a8" stroke-width="1"/>
+<rect x="228" y="237.5" width="25" height="2" rx="1" fill="#cdb894"/></g></g>
+<g class="wbody2"><g class="bounce2"><g class="body">
+<ellipse cx="112" cy="250" rx="19" ry="12" fill="url(#shoe)"/><ellipse cx="188" cy="250" rx="19" ry="12" fill="url(#shoe)"/>
+<ellipse cx="106" cy="246" rx="7" ry="3" fill="#fff" opacity=".35"/><ellipse cx="182" cy="246" rx="7" ry="3" fill="#fff" opacity=".35"/>
+<ellipse cx="150" cy="198" rx="66" ry="56" fill="url(#shirt)" filter="url(#drop)"/>
+<path d="M118 150 L150 176 L182 150 Q150 142 118 150Z" fill="#fff" stroke="#e5cba6" stroke-width="2" stroke-linejoin="round"/>
+<path d="M142 168 L158 168 L162 196 Q150 206 138 196Z" fill="url(#tie)" stroke="#b92f28" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="141" y="160" width="18" height="12" rx="6" fill="url(#tie)"/>
+<path d="M144 175 L146 192" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="110" cy="200" rx="16" ry="30" fill="#fff" opacity=".35" filter="url(#blur6)"/>
+</g><g class="head">
+<ellipse cx="150" cy="130" rx="64" ry="60" fill="url(#skin)" filter="url(#drop)"/>
+<ellipse cx="150" cy="130" rx="64" ry="60" fill="none" stroke="#e39a68" stroke-opacity=".35" stroke-width="2"/>
+<ellipse cx="110" cy="148" rx="16" ry="11" fill="url(#blush)"/><ellipse cx="190" cy="148" rx="16" ry="11" fill="url(#blush)"/>
+<g class="eyes">
+<ellipse cx="124" cy="128" rx="10" ry="12.5" fill="url(#eye)"/><circle cx="120.5" cy="123" r="4.2" fill="#fff"/><circle cx="128" cy="133" r="2" fill="#fff" opacity=".85"/>
+<ellipse cx="176" cy="128" rx="10" ry="12.5" fill="url(#eye)"/><circle cx="172.5" cy="123" r="4.2" fill="#fff"/><circle cx="180" cy="133" r="2" fill="#fff" opacity=".85"/></g>
+<path d="M138 152 Q150 164 162 152" fill="none" stroke="#7a3b25" stroke-width="4" stroke-linecap="round"/>
+<path d="M108 100 Q118 86 134 84" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/>
+<g class="hatg">
+<ellipse cx="150" cy="97" rx="70" ry="15" fill="url(#brim)" filter="url(#drop)"/>
+<path d="M92 96 Q92 40 150 40 Q208 40 208 96 Q150 112 92 96Z" fill="url(#hat)"/>
+<path d="M104 78 Q112 56 138 50" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="6" stroke-linecap="round"/>
+<path d="M96 92 Q150 108 204 92" fill="none" stroke="#14602d" stroke-opacity=".35" stroke-width="3"/>
+<circle cx="150" cy="70" r="13" fill="#ffe08a"/><circle cx="150" cy="70" r="13" fill="none" stroke="#e0a82a" stroke-width="2"/>
+<text x="150" y="76" text-anchor="middle" font-size="17" font-weight="900" fill="#b9780f" font-family="Arial Rounded MT Bold,Arial,sans-serif">$</text>
+<circle cx="145" cy="65" r="3" fill="#fff" opacity=".8"/>
+</g></g></g></g>
+<g class="calc">
+<ellipse cx="150.0" cy="278" rx="46.0" ry="7" fill="url(#shadow)"/>
+<rect x="108" y="229" width="84" height="52" rx="16" fill="url(#calcSide)"/>
+<rect x="108" y="222" width="84" height="52" rx="16" fill="url(#calc)"/>
+<rect x="111" y="225" width="78" height="26.0" rx="13" fill="#fff" opacity=".22"/>
+<rect x="117" y="230" width="66" height="13.52" rx="7" fill="url(#screen)" stroke="#6aa974" stroke-width="1.5"/>
+<rect x="117" y="230" width="66" height="5" rx="2.5" fill="#2a5a32" opacity=".18"/>
+<text x="150" y="242" text-anchor="middle" font-size="12" fill="#2d6a3b" font-weight="900" font-family="monospace">288.50</text>
+<rect class="k k00" x="118.0" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k01" x="134.8" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k02" x="151.6" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k03" x="168.4" y="243.8" width="13.5" height="6.8" rx="4" fill="url(#keyRed)" stroke="#c78a45" stroke-width=".8"/><rect class="k k10" x="118.0" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k11" x="134.8" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k12" x="151.6" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k13" x="168.4" y="252.7" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k20" x="118.0" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k21" x="134.8" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k22" x="151.6" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/><rect class="k k23" x="168.4" y="261.5" width="13.5" height="6.8" rx="4" fill="url(#key)" stroke="#c78a45" stroke-width=".8"/>
+<path d="M118 268 Q150.0 275 182 268" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(98 192)"><g class="armL" style="transform:rotate(-22deg)">
+<rect x="-12" y="-6" width="24" height="46" rx="12" fill="url(#sleeve)" stroke="#e3bf93" stroke-width="1.5"/>
+<rect x="-6" y="-2" width="5" height="30" rx="2.5" fill="#fff" opacity=".6"/>
+<circle cx="0" cy="46" r="13" fill="url(#skinArm)"/><circle cx="-4" cy="42" r="4" fill="#fff" opacity=".6"/></g></g>
+<g transform="translate(204 192)"><g class="armR" style="transform:rotate(-125deg)">
+<rect x="-12" y="-6" width="24" height="46" rx="12" fill="url(#sleeve)" stroke="#e3bf93" stroke-width="1.5"/>
+<rect x="-6" y="-2" width="5" height="30" rx="2.5" fill="#fff" opacity=".6"/>
+<circle cx="0" cy="46" r="13" fill="url(#skinArm)"/><circle cx="-4" cy="42" r="4" fill="#fff" opacity=".6"/></g></g>
+<g class="alert"><g class="alertin"><path d="M222 40 q0 -26 26 -26 h6 q26 0 26 26 q0 22 -22 25 l-8 12 l-4 -12 q-24 -2 -24 -25Z" transform="translate(-30 0)" fill="url(#bubble)" stroke="#b92f28" stroke-width="2.5" stroke-linejoin="round" filter="url(#drop)"/>
+<rect x="198" y="18" width="30" height="10" rx="5" fill="#fff" opacity=".35"/>
+<text x="224" y="52" text-anchor="middle" font-size="36" font-weight="900" fill="#fff" font-family="Arial Rounded MT Bold,Arial,sans-serif">!</text></g></g>
+</g>
+</svg><div class="cap"><span><i class="dot" style="background:#ee4a3f"></i>等你批准</span><small>舉手揮揮、等老闆</small></div></div>
+</div><script>
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+const k=b.dataset.k;document.querySelectorAll('.card').forEach(c=>c.classList.toggle('hide',k!=='all'&&c.dataset.k!==k));});
+</script></body></html>
