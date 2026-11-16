@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>樣品 B：3D 黏土公仔風 - 帳務部</title>
+<style>
+body{margin:0;background:#fbf3e6;font-family:system-ui,sans-serif;color:#4a3b2a;display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:390px;padding:16px;box-sizing:border-box}
+h1{font-size:18px;text-align:center}
+.card{background:#fff;border-radius:20px;padding:12px;margin:14px 0;text-align:center;box-shadow:0 4px 12px #0001}
+.card img{width:200px;height:200px;border-radius:16px;image-rendering:auto}
+.tag{font-size:14px;margin-top:6px}
+.idle img{animation:breathe 3s ease-in-out infinite}
+.working img{animation:bounce .8s ease-in-out infinite}
+.waiting img{animation:sway 1.2s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.04)}}
+@keyframes bounce{50%{transform:translateY(-8px)}}
+@keyframes sway{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+</style></head><body><div class="wrap">
+<h1>帳務部 · 黏土公仔風樣品</h1>
+<div class="card idle"><img src="sample-b/idle.png" alt="idle"><div class="tag">待命 idle（呼吸）</div></div>
+<div class="card working"><img src="sample-b/working.png" alt="working"><div class="tag">工作中 working（彈跳）</div></div>
+<div class="card waiting"><img src="sample-b/waiting.png" alt="waiting"><div class="tag">等老闆 waiting（搖晃）</div></div>
+</div></body></html>
