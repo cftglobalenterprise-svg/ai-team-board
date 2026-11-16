@@ -53,16 +53,92 @@ h1{font-family:var(--display);font-size:26px;margin:0;letter-spacing:.02em;text-
 .row.fresh{animation:flash 2s ease-out}
 @media (prefers-reduced-motion:reduce){.row.fresh{animation:none}}
 h2{font-size:15px;margin:26px 0 10px;letter-spacing:.04em;color:var(--muted);font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
-.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:left;font:inherit;color:inherit;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;border-left:4px solid var(--idle)}
-.wk.working{border-left-color:var(--work)} .wk.waiting{border-left-color:var(--wait)} .wk.error{border-left-color:var(--err)}
-.wk:hover{border-color:var(--accent)}
-.wk:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.wk .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.wk .nm{font-weight:700;font-size:16px}
-.wk .rl{color:var(--muted);font-size:12.5px}
-.wk .cur{font-size:13.5px;min-height:40px;overflow-wrap:anywhere}
-.wk .tm{font-size:12px;color:var(--muted)}
+/* ===== 像素辦公室 ===== */
+.office{position:relative;border:3px solid #4a2f18;border-radius:6px;overflow:hidden;background:#c8955a;box-shadow:var(--shadow);font-family:var(--font)}
+.office svg{display:block;shape-rendering:crispEdges}
+.office::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:transparent}
+.office[data-tod=dusk]::after{background:rgba(255,140,60,.13)}
+.office[data-tod=night]::after{background:rgba(12,20,60,.30)}
+.wall{display:flex;justify-content:space-around;align-items:flex-end;height:132px;padding:0 6px;border-bottom:8px solid #6b4423;
+  background:repeating-linear-gradient(90deg,#efe3c6 0 14px,#e7d7b1 14px 16px)}
+.wall .win{align-self:flex-start;margin-top:14px}
+.wall .clk{align-self:flex-start;margin-top:8px}
+.wall .win svg{width:116px;height:92px}
+.wall .clk svg{width:40px;height:40px}
+.wall .plant svg{width:44px;height:52px}
+.wall .cof svg{width:60px;height:80px}
+.sky{fill:#8fd0f5}.hill1{fill:#5aa851}.hill2{fill:#3f8a3f}.hill3{fill:#357a37}
+.office[data-tod=dusk] .sky{fill:#f0a070}.office[data-tod=dusk] .hill1{fill:#4b7d4a}.office[data-tod=dusk] .hill2{fill:#386a3d}.office[data-tod=dusk] .hill3{fill:#2f5a35}
+.office[data-tod=night] .sky{fill:#14213d}.office[data-tod=night] .hill1{fill:#25483a}.office[data-tod=night] .hill2{fill:#1c3a2e}.office[data-tod=night] .hill3{fill:#162e25}
+.sun,.moon,.stars,.cloud,.fog{display:none}
+.office[data-tod=day] .sun,.office[data-tod=day] .cloud{display:inline}
+.office[data-tod=dusk] .sun{display:inline}
+.office[data-tod=night] .moon,.office[data-tod=night] .stars{display:inline}
+.office.foggy .fog{display:inline}
+.office.foggy .sun,.office.foggy .moon{opacity:.45}
+.fogb{fill:#fff;opacity:.5}
+.walk{position:relative;height:34px;background:#b98550}
+.cat{position:absolute;bottom:2px;left:-60px;width:48px;height:30px;display:none;z-index:2;pointer-events:none}
+.cat.on{display:block;animation:catwalk 16s steps(80,end) forwards}
+.cat svg{width:48px;height:30px;animation:catbob .5s steps(1,end) infinite}
+@keyframes catwalk{from{left:-60px}to{left:100%}}
+@keyframes catbob{0%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+.floor{position:relative;padding:0 8px 10px;
+  background:repeating-linear-gradient(90deg,transparent 0 62px,rgba(80,45,15,.22) 62px 64px),
+  repeating-linear-gradient(0deg,#c8955a 0 30px,#bd8a50 30px 60px)}
+.floor .walk{margin:0 -8px;background:transparent}
+.desks{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 6px}
+@media (min-width:600px){.desks{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:960px){.desks{grid-template-columns:repeat(5,1fr)}}
+.desk{position:relative;display:block;width:100%;background:none;border:0;padding:0 0 4px;margin:0;font:inherit;color:inherit;cursor:pointer;text-align:center}
+.desk:hover .spr{filter:brightness(1.07)}
+.desk .spr{width:100%;height:auto;aspect-ratio:64/56}
+.bw{position:absolute;top:0;left:2px;right:2px;z-index:2}
+.bw[hidden]{display:none}
+.bub{background:#fff;color:#222;font-size:11px;line-height:1.25;padding:3px 5px;border:2px solid #222;text-align:left;overflow:hidden;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.bw::after{content:"";position:absolute;left:28%;bottom:-6px;width:7px;height:7px;background:#fff;border-right:2px solid #222;border-bottom:2px solid #222;transform:rotate(45deg) translate(-2px,-2px)}
+.desk[data-st=waiting] .bub{background:#fff1ef;border-color:#b3261e;color:#7a1710;font-weight:700}
+.desk[data-st=waiting] .bw::after{background:#fff1ef;border-color:#b3261e}
+.desk[data-st=error] .bub{border-color:#b3261e;color:#7a1710}
+.lb{display:inline-flex;align-items:center;gap:6px;max-width:100%;background:#fff6e0;color:#3a2a18;border:2px solid #5b3a1e;padding:0 8px;font-size:13px;font-weight:700;line-height:1.5;white-space:nowrap}
+.lb small{font-size:11px;font-weight:500;color:#6a5a45}
+.desk:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+/* 小人姿勢：只顯示符合 data-st 的那一組（display:none 的動畫不會跑，省電） */
+.p{display:none}
+.desk[data-st=idle] .p-idle,.desk[data-st=error] .p-idle,.desk[data-st=working] .p-work,.desk[data-st=waiting] .p-wait{display:inline}
+/* 動畫（皆為 2 格跳動，像素感） */
+.k1{animation:k1 .4s steps(1,end) infinite}
+.k2{animation:k1 .4s steps(1,end) .2s infinite}
+@keyframes k1{0%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+.wave{animation:wave .6s steps(1,end) infinite;transform-origin:22px 25px}
+.wave.wa{transform-origin:16px 25px}.wave.wv{transform-origin:25px 28px}
+@keyframes wave{0%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.blink{animation:blink 1s steps(1,end) infinite}
+@keyframes blink{0%{opacity:1}50%{opacity:.2}}
+.rec{animation:rec .8s steps(1,end) infinite}
+@keyframes rec{0%{fill:#ff3b30}50%{fill:#5a1410}}
+.clap{transform-origin:4px 32px;animation:clap 1.2s steps(1,end) infinite}
+@keyframes clap{0%{transform:rotate(-24deg)}30%{transform:rotate(0)}100%{transform:rotate(0)}}
+.stamp{animation:stamp 1.2s steps(1,end) infinite}
+@keyframes stamp{0%{transform:translateY(0)}40%{transform:translateY(3px)}60%{transform:translateY(0)}}
+.mark{animation:mark 1.2s steps(1,end) infinite}
+@keyframes mark{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
+.press{animation:press .6s steps(1,end) infinite}
+@keyframes press{0%{transform:translate(0,0)}50%{transform:translate(2px,1px)}}
+.pop{font:700 6px monospace;fill:#2e9e4e;opacity:0;animation:pop 1.6s steps(5,end) infinite}
+@keyframes pop{0%{transform:translateY(3px);opacity:0}20%{opacity:1}100%{transform:translateY(-7px);opacity:0}}
+.flick{animation:flick .6s steps(1,end) infinite}
+@keyframes flick{0%{opacity:1}50%{opacity:.25}}
+.sway{transform-origin:10px 17px;animation:sway 3.2s steps(1,end) infinite}
+@keyframes sway{0%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.steam{animation:steam 2s steps(4,end) infinite}
+.steam.s2{animation-delay:.9s}
+@keyframes steam{0%{transform:translateY(3px);opacity:0}30%{opacity:.9}100%{transform:translateY(-4px);opacity:0}}
+.twk{animation:blink 2.4s steps(1,end) infinite}
+.fogd{animation:fogd 14s steps(7,end) infinite alternate}
+@keyframes fogd{from{transform:translateX(-3px)}to{transform:translateX(3px)}}
+@media (prefers-reduced-motion:reduce){.office *{animation:none!important}.cat{display:none!important}.pop{opacity:0}}
 .st{font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:760px){.cols{grid-template-columns:1fr}}
@@ -128,7 +204,7 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
   <div class="panel" id="tasks"></div>
 
   <h2>員工</h2>
-  <div class="grid" id="grid"></div>
+  <div class="office" id="grid"></div>
 
   <div class="cols">
     <div>
@@ -144,6 +220,173 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
 
 <div class="ov" id="ov"><div class="md" id="md" role="dialog" aria-modal="true"></div></div>
 
+<script>
+/* 像素辦公室：場景（牆/窗/鐘/盆栽/咖啡機/貓）+ 九張桌子。
+   每張桌子 = <button.desk data-st=狀態>，內含 inline SVG 小人（三組姿勢 p-idle/p-work/p-wait，CSS 依 data-st 切換）。
+   客製某部門：在下方 SPRITES 加 id → 函式，回傳 SVG 內部字串即可（見 acct / video）。 */
+var Office=(function(){
+  var SKIN="#f2c9a0";
+  function R(x,y,w,h,f,c){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+f+'"'+(c?' class="'+c+'"':'')+'/>'}
+  function G(c,inner){return '<g class="'+c+'">'+inner+'</g>'}
+  function Z(x,y,s,f){f=f||"#fff";return R(x,y,4*s,s,f)+R(x+2*s,y+s,s,s,f)+R(x+s,y+2*s,s,s,f)+R(x,y+3*s,4*s,s,f)}  // 像素 Z
+  function ZZZ(x,y){return Z(x,y,2)+Z(x+10,y-8,1)}
+  function BANG(x,y){return G("blink",R(x-1,y-1,6,13,"#fff")+R(x,y,4,8,"#e53935")+R(x,y+9,4,3,"#e53935"))}
+  function DESK(){return R(3,34,58,4,"#c08a52")+R(3,34,58,1,"#d9a46a")+R(3,38,58,10,"#8f5d31")+R(3,47,58,1,"#6e4524")+
+    R(5,48,4,6,"#6e4524")+R(55,48,4,6,"#6e4524")+R(24,40,16,5,"#7a4d27")+R(30,42,4,1,"#d9c08a")}
+  function MON(){return R(20,22,24,13,"#3a3f47")+R(21,23,22,11,"#4a515b")+R(30,27,4,3,"#9aa3ad")}
+  function KEYB(){return R(22,35,20,2,"#e8e8ea")+R(22,36,20,1,"#b9b9be")}
+
+  /* ---------- 通用小人（其餘七個部門共用；以 id 換髮色/衣色/桌上小物） ---------- */
+  var LOOK={
+    "w1-boss":{h:"#222",s:"#b8382f",p:R(7,30,11,4,"#e8c34a")+R(9,31,7,1,"#8a6d12")},                                   /* 名牌 */
+    "w2-plan":{h:"#6b3d1f",s:"#3d7ab8",p:R(8,26,9,8,"#d8c9a0")+R(10,25,5,2,"#777")+R(10,28,5,1,"#999")+R(10,30,5,1,"#999")}, /* 板夾 */
+    "w3-product":{h:"#1c1c1c",s:"#e08a2b",p:R(8,28,8,6,"#59c3c3")+R(8,28,8,1,"#9ef")+R(15,28,1,6,"#3a9a9a")},            /* 3D 方塊 */
+    "w4-copy":{h:"#caa14a",s:"#8e5bb8",p:R(7,29,10,5,"#fff")+R(9,31,6,1,"#999")+R(18,27,1,7,"#d33")},                     /* 紙筆 */
+    "w6-data":{h:"#3b2a20",s:"#2f9e7d",p:R(8,31,2,3,"#e55")+R(11,29,2,5,"#5b9")+R(14,27,2,7,"#59f")},                   /* 長條圖 */
+    "w7-ops":{h:"#555",s:"#6b7b8c",p:R(7,26,10,8,"#444")+R(9,28,3,1,"#6f6")+R(9,30,3,1,"#fb4")+R(9,32,6,1,"#666")},      /* 伺服器 */
+    "w9-sys":{h:"#1f3a5f",s:"#2c3e50",p:R(9,26,3,8,"#aab")+R(7,25,7,3,"#aab")+R(9,26,3,2,"#2c3e50")}                     /* 扳手 */
+  };
+  function head(h,mouth){return R(26,13,12,4,h)+R(27,17,10,8,SKIN)+R(29,20,1,2,"#222")+R(34,20,1,2,"#222")+mouth}
+  function generic(id){
+    var L=LOOK[id]||{h:"#333",s:"#888",p:""},h=L.h,s=L.s;
+    var idle=R(25,27,16,8,s)+R(23,25,11,3,h)+R(24,28,10,6,SKIN)+R(26,31,3,1,"#333")+DESK()+L.p+
+      R(20,33,26,3,s)+R(40,33,4,3,SKIN)+ZZZ(40,18);
+    var work=R(24,25,16,10,s)+head(h,R(31,23,3,1,"#b3624a"))+MON()+DESK()+L.p+KEYB()+
+      G("k1",R(25,33,4,2,SKIN))+G("k2",R(35,33,4,2,SKIN));
+    var wait=R(24,25,16,10,s)+head(h,R(31,23,3,2,"#8a3a2a"))+MON()+G("wave",R(21,19,3,7,s)+R(21,13,3,7,SKIN)+R(20,11,5,3,SKIN))+DESK()+L.p+KEYB()+BANG(46,6);
+    return {idle:idle,work:work,wait:wait};
+  }
+
+  /* ---------- 帳務部 w8-books：會計帽 + 大計算機 + 收據堆（完整動畫） ---------- */
+  function acct(){
+    var pile=R(5,31,13,4,"#ece7d6")+R(5,29,12,3,"#f6f2e6")+R(7,27,11,3,"#fff")+R(8,28,6,1,"#b9b19a");
+    var visor=R(18,12,14,2,"#2f8f4e")+R(17,14,16,2,"#1f6b38");
+    function calc(screen,dig){return R(38,22,20,15,"#3a4a5c")+R(38,22,20,1,"#5c7088")+R(40,24,16,4,screen)+dig+
+      R(40,30,3,1,"#dfe5ea")+R(44,30,3,1,"#dfe5ea")+R(48,30,3,1,"#dfe5ea")+R(52,30,3,1,"#dfe5ea")+
+      R(40,32,3,1,"#dfe5ea")+R(44,32,3,1,"#dfe5ea")+R(48,32,3,1,"#dfe5ea")+R(52,32,3,1,"#dfe5ea")+
+      R(40,34,3,1,"#dfe5ea")+R(44,34,3,1,"#dfe5ea")+R(48,34,3,1,"#dfe5ea")+R(52,34,3,1,"#e55")}
+    function face(m){return R(19,15,12,3,"#2b2b2b")+R(20,17,10,7,SKIN)+R(22,20,1,2,"#222")+R(27,20,1,2,"#222")+m}
+    var body=R(17,24,16,11,"#f4f4f4")+R(24,24,2,9,"#c0392b");
+    var idle=R(16,27,16,8,"#f4f4f4")+R(6,21,12,9,SKIN)+R(5,20,14,3,"#2f8f4e")+R(8,25,3,1,"#333")+DESK()+pile+
+      R(14,32,16,3,"#f4f4f4")+R(30,32,3,3,SKIN)+calc("#2a3a35","")+ZZZ(24,14);
+    var work=body+visor+face(R(24,22,3,1,"#b3624a"))+DESK()+pile+
+      G("press",R(29,27,5,3,"#f4f4f4")+R(33,28,4,3,SKIN))+
+      G("stamp",R(10,21,4,6,"#7a4a2a")+R(8,26,8,2,"#a33")+R(15,25,3,6,"#f4f4f4")+R(15,30,3,2,SKIN))+G("mark",R(8,28,8,1,"#d33"))+
+      calc("#b7f0b0",G("flick",R(48,25,6,2,"#2e6b2e"))+R(41,25,4,2,"#2e6b2e"))+
+      '<text class="pop" x="42" y="21">+88</text><text class="pop" x="48" y="21" style="animation-delay:.8s">$12</text>';
+    var wait=body+visor+face(R(24,22,3,2,"#8a3a2a"))+G("wave wa",R(14,18,3,8,"#f4f4f4")+R(14,12,3,7,SKIN)+R(13,10,5,3,SKIN))+DESK()+pile+calc("#b7f0b0",R(48,25,2,2,"#2e6b2e")+R(51,26,2,1,"#2e6b2e"))+BANG(42,4);
+    return {idle:idle,work:work,wait:wait};
+  }
+
+  /* ---------- 影像腳本部 w5-video：墨鏡 + 肩扛攝影機 + 場記板 + 導演椅（完整動畫） ---------- */
+  function video(){
+    var crate=R(3,42,16,9,"#8a5a2f")+R(3,42,16,1,"#a97545")+R(3,46,16,1,"#6e4524");
+    var board=R(4,32,14,10,"#2b2b2b")+R(6,35,10,1,"#fff")+R(6,38,7,1,"#fff");
+    function stick(c){return G(c,R(4,29,14,3,"#2b2b2b")+R(6,29,2,3,"#fff")+R(10,29,2,3,"#fff")+R(14,29,2,3,"#fff"))}
+    var chairSit=R(23,25,22,12,"#c9a063")+R(23,25,22,1,"#6b4423")+R(24,38,20,3,"#c9a063")+R(24,41,2,9,"#6b4423")+R(42,41,2,9,"#6b4423")+R(27,45,14,1,"#6b4423");
+    function sit(arm,cam,mouth){return chairSit+R(28,41,4,8,"#3a5a8a")+R(35,41,4,8,"#3a5a8a")+R(27,49,6,2,"#222")+R(34,49,6,2,"#222")+
+      R(27,26,12,12,"#2d2d34")+R(28,14,10,9,SKIN)+R(28,12,10,3,"#222")+R(27,13,1,6,"#222")+
+      R(29,18,4,2,"#111")+R(34,18,4,2,"#111")+R(33,18,1,1,"#111")+R(29,18,1,1,"#7bd")+mouth+arm+cam}
+    var cam=function(light){return R(38,15,13,8,"#33353d")+R(40,13,6,2,"#555")+R(51,16,5,5,"#222")+R(55,17,1,3,"#7bd")+R(40,16,2,2,"#722",light)+R(39,23,3,6,"#2d2d34")+R(42,23,3,3,SKIN)};
+    var armL=R(24,28,4,9,"#2d2d34");
+    var work=crate+board+stick("clap")+sit(armL,cam("rec"),R(32,21,3,1,"#b3624a"));
+    var wait=crate+board+stick("")+sit(G("wave wv",R(24,19,3,9,"#2d2d34")+R(23,13,3,7,SKIN)+R(22,11,5,3,SKIN)),cam(""),R(32,21,3,2,"#8a3a2a"))+BANG(7,5);
+    var idle=crate+board+stick("")+
+      R(20,40,40,2,"#c9a063")+R(22,42,2,8,"#6b4423")+R(56,42,2,8,"#6b4423")+R(28,46,24,1,"#6b4423")+
+      R(31,45,15,6,"#33353d")+R(46,46,4,4,"#222")+R(33,46,2,2,"#722")+
+      R(31,34,20,6,"#2d2d34")+R(51,36,9,4,"#3a5a8a")+R(59,36,4,4,"#222")+R(21,32,10,8,SKIN)+R(21,31,10,2,"#222")+
+      R(20,35,12,3,"#3a2a6a")+R(35,36,10,2,SKIN)+ZZZ(24,20);
+    return {idle:idle,work:work,wait:wait};
+  }
+  var SPRITES={"w8-books":acct,"w5-video":video};
+  function spriteSvg(id){
+    var p=(SPRITES[id]||function(){return generic(id)})();
+    return '<svg class="spr" viewBox="0 0 64 56" aria-hidden="true">'+G("p p-idle",p.idle)+G("p p-work",p.work)+G("p p-wait",p.wait)+'</svg>';
+  }
+
+  /* ---------- 場景 ---------- */
+  var WIN='<svg viewBox="0 0 58 46" aria-hidden="true">'+R(0,0,58,46,"#7a4f2b")+R(3,3,52,40,"","sky")+
+    '<g class="stars">'+R(8,8,1,1,"#fff","twk")+R(18,14,1,1,"#fff")+R(26,7,1,1,"#fff","twk")+R(46,20,1,1,"#fff")+R(12,24,1,1,"#fff")+R(36,12,1,1,"#fff","twk")+'</g>'+
+    '<g class="sun">'+R(40,8,4,8,"#ffd84a")+R(38,10,8,4,"#ffd84a")+'</g>'+
+    '<g class="moon">'+R(38,8,6,8,"#f3f0d0")+R(41,9,5,6,"","sky")+'</g>'+
+    '<g class="cloud">'+R(8,10,10,3,"#fff")+R(11,8,5,2,"#fff")+R(28,17,9,3,"#fff")+R(30,15,4,2,"#fff")+'</g>'+
+    R(3,30,22,6,"","hill1")+R(18,28,20,8,"","hill1")+R(3,35,52,8,"","hill2")+R(3,38,52,5,"","hill3")+
+    R(3,36,52,1,"rgba(0,0,0,.15)")+R(3,39,52,1,"rgba(0,0,0,.15)")+R(3,41,52,1,"rgba(0,0,0,.15)")+
+    '<g class="fog">'+R(3,3,52,40,"","fogb")+G("fogd",R(3,14,30,3,"#fff")+R(24,26,30,3,"#fff"))+'</g>'+
+    R(28,3,2,40,"#7a4f2b")+R(3,22,52,2,"#7a4f2b")+R(0,43,58,3,"#a0693a")+'</svg>';
+  var CLK='<svg viewBox="0 0 40 40" aria-label="時鐘"><rect x="0" y="0" width="40" height="40" fill="#7a4f2b"/><rect x="3" y="3" width="34" height="34" fill="#fffaf0"/>'+
+    '<rect x="19" y="4" width="2" height="4" fill="#333"/><rect x="19" y="32" width="2" height="4" fill="#333"/><rect x="4" y="19" width="4" height="2" fill="#333"/><rect x="32" y="19" width="4" height="2" fill="#333"/>'+
+    '<line id="oc-h" x1="20" y1="20" x2="20" y2="10" stroke="#222" stroke-width="3"/><line id="oc-m" x1="20" y1="20" x2="20" y2="6" stroke="#444" stroke-width="2"/><rect x="19" y="19" width="2" height="2" fill="#c0392b"/></svg>';
+  var PLANT='<svg viewBox="0 0 20 24" aria-hidden="true">'+G("sway",R(9,8,2,9,"#2e7d32")+R(3,7,6,3,"#43a047")+R(11,5,6,3,"#43a047")+R(6,3,8,3,"#66bb6a")+R(8,0,4,3,"#66bb6a")+R(2,10,5,2,"#2e9e4e")+R(13,9,5,2,"#2e9e4e"))+
+    R(4,16,12,2,"#c96a40")+R(5,18,10,6,"#b5562f")+'</svg>';
+  var COF='<svg viewBox="0 -8 24 34" aria-hidden="true">'+G("steam",R(8,-2,2,2,"#fff"))+G("steam s2",R(12,-5,2,2,"#fff"))+
+    R(0,20,24,6,"#8a5a2f")+R(0,20,24,1,"#a97545")+R(2,2,18,3,"#2f3338")+R(3,5,16,15,"#4a4f57")+R(7,10,8,10,"#cfe6f5")+R(8,14,6,6,"#6b3f24")+R(16,8,2,2,"#e53935")+R(19,14,4,6,"#fff")+R(23,15,1,3,"#fff")+'</svg>';
+  var CAT='<svg viewBox="0 0 16 10" aria-hidden="true">'+R(2,3,10,5,"#e8923a")+R(11,1,5,5,"#e8923a")+R(11,0,1,2,"#e8923a")+R(15,0,1,2,"#e8923a")+R(14,3,1,1,"#222")+R(0,1,2,1,"#e8923a")+R(0,2,1,3,"#e8923a")+R(3,8,2,2,"#c9762a")+R(9,8,2,2,"#c9762a")+R(4,4,6,1,"#f5b36a")+'</svg>';
+
+  var root=null,desksEl=null,deskIds="",catEl=null,started=false;
+  function qs(k){var m=new RegExp("[?&]"+k+"=([^&]*)").exec(location.search);return m?m[1]:null}
+  function tod(h){return h>=7&&h<17?"day":(h>=5&&h<7)||(h>=17&&h<19)?"dusk":"night"}
+  function seeded(d){var n=((d.getFullYear()*372+d.getMonth()*31+d.getDate())*24+d.getHours())*2654435761%100;return Math.abs(n)}
+  function updateClock(){
+    var d=new Date(),h=document.getElementById("oc-h"),m=document.getElementById("oc-m");
+    if(h)h.setAttribute("transform","rotate("+(((d.getHours()%12)+d.getMinutes()/60)*30)+" 20 20)");
+    if(m)m.setAttribute("transform","rotate("+(d.getMinutes()*6)+" 20 20)");
+    if(root){
+      var t=qs("tod")||tod(d.getHours());root.dataset.tod=t;
+      var f=qs("fog");var fog=f!=null?f==="1":seeded(d)<(d.getHours()<10?35:12);root.classList.toggle("foggy",fog);
+    }
+  }
+  function catVisit(){
+    var still=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(!still&&!document.hidden&&catEl&&!catEl.classList.contains("on"))catEl.classList.add("on");
+    setTimeout(catVisit,45000+Math.random()*75000);
+  }
+  function mount(host){
+    root=host;
+    host.innerHTML='<div class="wall"><div class="plant">'+PLANT+'</div><div class="win">'+WIN+'</div><div class="clk">'+CLK+'</div><div class="cof">'+COF+'</div></div>'+
+      '<div class="floor"><div class="walk"><div class="cat">'+CAT+'</div></div><div class="desks"></div></div>';
+    desksEl=host.querySelector(".desks");catEl=host.querySelector(".cat");
+    catEl.addEventListener("animationend",function(){catEl.classList.remove("on")});
+    updateClock();
+    if(!started){started=true;
+      setInterval(function(){if(!document.hidden)updateClock()},20000);
+      document.addEventListener("visibilitychange",function(){if(!document.hidden)updateClock()});
+      setTimeout(catVisit,qs("cat")?500:12000+Math.random()*13000);
+    }
+  }
+  function trunc(t){t=(t||"").replace(/\s+/g," ").trim();return t.length>28?t.slice(0,27)+"…":t}
+  function render(host,workers,onOpen,STATUS){
+    if(root!==host||!host.firstChild)mount(host);
+    var ids=workers.map(function(w){return w.id}).join();
+    if(ids!==deskIds){
+      deskIds=ids;desksEl.textContent="";
+      if(!workers.length){var e=document.createElement("div");e.className="empty";e.textContent="還沒有員工資料。";e.style.cssText="grid-column:1/-1;background:#fff6e0;color:#3a2a18";desksEl.appendChild(e)}
+      workers.forEach(function(w){
+        var b=document.createElement("button");b.type="button";b.className="desk";b.id="wk-"+w.id;
+        b.innerHTML='<div class="bw" hidden><div class="bub"></div></div>'+spriteSvg(w.id)+'<div class="lb"><span class="dot"></span><span class="nm"></span><small></small></div>';
+        b.addEventListener("click",function(){onOpen(w.id)});
+        desksEl.appendChild(b);
+      });
+    }
+    workers.forEach(function(w){
+      var b=document.getElementById("wk-"+w.id);if(!b)return;
+      var sig=w.status+"|"+w.current+"|"+w.name;
+      if(b._sig!==sig){
+        b._sig=sig;b.dataset.st=w.status;
+        b.querySelector(".nm").textContent=w.name;
+        b.querySelector("small").textContent=STATUS[w.status]||w.status;
+        b.querySelector(".dot").className="dot "+(w.status==="idle"?"":w.status);
+        var bw=b.querySelector(".bw"),txt=w.status==="waiting"?"等你確認":w.status==="working"||w.status==="error"?trunc(w.current):"";
+        if(w.status==="waiting"&&!w.current)txt="等你確認";
+        bw.hidden=!txt;b.querySelector(".bub").textContent=txt;
+        b.setAttribute("aria-label",w.name+"，"+(STATUS[w.status]||w.status)+(w.current?"：":"")+(w.current||""));
+      }
+      b.title=(w.role||"")+(w.current?"｜"+w.current:"");
+    });
+  }
+  return {render:render};
+})();
+</script>
 <script>
 (function(){
   var STATUS={idle:"待命",working:"工作中",waiting:"等你確認",error:"異常"};
@@ -182,21 +425,7 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
       s.appendChild(document.createTextNode(p[1]));box.appendChild(s)});
   }
 
-  function renderGrid(){
-    var g=$("grid");g.textContent="";
-    if(!S.workers.length){g.appendChild(el("div","empty","還沒有員工資料。"));return}
-    S.workers.forEach(function(w){
-      var b=el("button","wk "+w.status);b.type="button";b.id="wk-"+w.id;
-      var top=el("div","top");top.appendChild(el("span","nm",w.name));
-      var st=el("span","st");st.appendChild(el("span","dot "+(w.status==="idle"?"":w.status)));st.appendChild(document.createTextNode(STATUS[w.status]||w.status));
-      top.appendChild(st);b.appendChild(top);
-      b.appendChild(el("div","rl",w.role||""));
-      b.appendChild(el("div","cur",w.current||"目前沒有進行中的工作"));
-      b.appendChild(el("div","tm",(w.status==="working"&&w.updatedAt?"已工作 "+dur(w.updatedAt)+" · ":"")+"最後更新 "+ago(w.updatedAt)));
-      b.addEventListener("click",function(){openWorker(w.id)});
-      g.appendChild(b);
-    });
-  }
+  function renderGrid(){Office.render($("grid"),S.workers,openWorker,STATUS)}
 
   function renderApprove(){
     var p=$("approve");p.textContent="";
@@ -296,6 +525,7 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
   }
 
   function setOutput(id,status,a,b){
+    if(!sb){showBanner("示範模式：不會真的送出");closeModal();return}
     a.disabled=b.disabled=true;var old=a.textContent;a.textContent="處理中…";
     var bd=a.parentNode.parentNode;var m=bd.querySelector(".errmsg");if(m)m.remove();
     sb.from("board_outputs").update({status:status,decided_at:new Date().toISOString()}).eq("id",id).then(function(r){
@@ -304,7 +534,9 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
     });
   }
   function addTask(worker,ta,btn){
-    var text=ta.value.trim();if(!text)return;btn.disabled=true;
+    var text=ta.value.trim();if(!text)return;
+    if(!sb){showBanner("示範模式：不會真的送出");return}
+    btn.disabled=true;
     sb.from("board_tasks").insert({worker:worker,text:text}).then(function(r){
       btn.disabled=false;
       if(r.error){showBanner("任務沒有送出："+r.error.message);return}
@@ -320,7 +552,8 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
   }
 
   var SB_URL="https://zyeyhyfdjtgmoocdjgcg.supabase.co", SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZXloeWZkanRnbW9vY2RqZ2NnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3NTAxMjIsImV4cCI6MjA5MDMyNjEyMn0.9W1f4KWxj82J8cgD1oPEmMfpqcFe11an9v9-ybjV-Sw";
-  var sb=supabase.createClient(SB_URL,SB_KEY);
+  var DEMO=/[?&]demo(=|&|$)/.test(location.search);
+  var sb=DEMO?null:supabase.createClient(SB_URL,SB_KEY);
   var ready=false;
   function mapW(r){return{id:r.id,name:r.name,role:r.role,scope:r.scope,status:r.status,current:r.current_text,order:r.sort_order,updatedAt:r.updated_at}}
   function mapL(r){return{id:r.id,worker:r.worker,text:r.text,at:r.at}}
@@ -349,6 +582,23 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
     }).catch(function(){loadErr=true;showBanner("暫時連不上資料，可能顯示的是舊內容。")}).then(function(){loading=false;if(again){again=false;load()}});
   }
 
+
+  /* ?demo：假資料預覽（不連 Supabase、不需登入）。?demo&tod=night|dusk|day&fog=1 可強制天色/霧 */
+  function startDemo(){
+    var ago_=function(m){return new Date(Date.now()-m*60000).toISOString()};
+    var W=[["w1-boss","總管","統籌與派工","idle","",1],["w2-plan","策劃部","企劃與選題","waiting","IG 十月內容企劃草稿等你看",2],
+      ["w3-product","產品部","3D 打印產品開發","idle","",3],["w4-copy","文案部","貼文與標題","idle","",4],
+      ["w5-video","影像腳本部","短片腳本與分鏡","working","寫 Reel 腳本：Unbound 開箱 30 秒版本",5],["w6-data","數據部","數據與報表","idle","",6],
+      ["w7-ops","後台部","後台與客服","idle","",7],["w8-books","帳務部","記帳與對帳","working","核對 10 月收據並登錄帳目",8],
+      ["w9-sys","系統部","網站與系統","idle","",9]];
+    S.workers=W.map(function(r){return{id:r[0],name:r[1],role:r[2],scope:r[2],status:r[3],current:r[4],order:r[5],updatedAt:ago_(r[3]==="idle"?240:12)}});
+    S.tasks=[{id:1,worker:"w1-boss",text:"（示範）幫我想 5 個適合大馬賣的 3D 打印小物",status:"進行中",createdAt:ago_(30)}];
+    S.logs=[{id:1,worker:"w8-books",text:"開始核對 10 月收據",at:ago_(12)},{id:2,worker:"w5-video",text:"開始寫 Reel 腳本",at:ago_(8)}];
+    S.outputs=[{id:1,worker:"w2-plan",title:"（示範）IG 十月內容企劃",body:"示範內容",status:"pending",at:ago_(20)}];
+    ready=true;$("app").hidden=false;$("login").hidden=true;showBanner("示範模式：假資料，不連線。");renderAll();
+    tick=setInterval(function(){if(!document.hidden)tickRender()},30000);
+    window.__demoSet=function(id,st,txt){S.workers.forEach(function(w){if(w.id===id){w.status=st;w.current=txt||""}});renderAll()};
+  }
   var poll=null, tick=null, chan=null, rtState="off", dbt=null;
   function setConn(){
     var c=$("conn");c.textContent="";
@@ -394,7 +644,8 @@ button.b:disabled{opacity:.5;cursor:not-allowed}
   $("pw").addEventListener("keydown",function(e){if(e.key==="Enter")$("lgbtn").click()});
   $("logout").addEventListener("click",function(){sb.auth.signOut().then(function(){S.workers=[];S.logs=[];S.tasks=[];S.outputs=[];showApp(false)})});
   $("order-btn").addEventListener("click",function(){addTask("w1-boss",$("order-text"),$("order-btn"))});
-  sb.auth.getSession().then(function(r){showApp(!!(r.data&&r.data.session))});
+  if(DEMO)startDemo();
+  else sb.auth.getSession().then(function(r){showApp(!!(r.data&&r.data.session))});
 })();
 </script>
 </body>
